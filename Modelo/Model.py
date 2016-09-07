@@ -35,7 +35,7 @@ class Form(QDialog):
         user = str(self.userLine.text())
         passwd= str(self.passwdLine.text())
         query = QtSql.QSqlQuery()
-        query.exec_("insert into empleados values(01, " + user + ", " + passwd + ")")
+        query.exec_("insert into empleados values(01, %user, %passwd)")
         print user + " " + passwd
 
 def initializeModel(model):
@@ -52,14 +52,11 @@ def createView(title, model):
     view.setWindowTitle(title)
     return view
 
-def update():
-    projectModel.setQuery("select * from empleados",db)
 
 if __name__ == '__main__':
 
    query = QtSql.QSqlQuery()
    app = QtGui.QApplication(sys.argv)
-   app.setQuitOnLastWindowClosed(False)
    db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
    db.setDatabaseName('fichadas.db')
    model = QtSql.QSqlTableModel()
@@ -67,13 +64,9 @@ if __name__ == '__main__':
    initializeModel(model)
 
    projectModel = QSqlQueryModel()
-   update()
+   projectModel.setQuery("select * from empleados",db)
    projectView = QTableView()
    projectView.setModel(projectModel)
-
-   timer = QTimer()
-   timer.timeout.connect(update)
-   timer.start(1000)
 
    form = Form()
    form.show()
