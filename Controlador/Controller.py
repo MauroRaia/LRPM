@@ -48,6 +48,13 @@ class Controller():
         self.ventana.box_cv.setHidden(True)
         self.ventana.box_qv.setHidden(False)
 
+    def disconnect(self):
+        self.ventana.displayUserAdmin.clear()
+        self.ventana.displayPassAdmin.clear()
+        self.ventana.displayUserAdmin.insert("Usuario")
+        self.ventana.displayPassAdmin.insert("passwd")
+        self.show_fv()
+
     def autenticateA(self):
         user = str(self.ventana.displayUserAdmin.text())
         passwd = str(self.ventana.displayPassAdmin.text())
@@ -92,6 +99,17 @@ class Controller():
         dni = int(self.ventana.displayDniEmpleado.text())
         querys.execute('INSERT INTO Empleados(nombre, apellido, dni, usuario, passwd) VALUES (?, ?, ?, ?, ?)', (nombre, apellido, dni, usuario, passwd))
         database.commit()
+        self.ventana.displayUserFEmpleado.clear()
+        self.ventana.displayPassFEmpleado.clear()
+        self.ventana.displayDniEmpleado.clear()
+        self.ventana.displayNombreEmpleado.clear()
+        self.ventana.displayApellidoEmpleado.clear()
+        self.ventana.displayUserFEmpleado.insert("Usuario")
+        self.ventana.displayPassFEmpleado.insert("Passwd")
+        self.ventana.displayDniEmpleado.insert("Dni")
+        self.ventana.displayNombreEmpleado("Nombre")
+        self.ventana.displayApellidoEmpleado("Apellido")
+        self.show_sv
 
     def agregarAdministrador(self):
         usuario = str(self.ventana.displayUserFAdmin.text())
@@ -101,6 +119,16 @@ class Controller():
         dni = int(self.ventana.displayDniAdmin.text())
         querys.execute('INSERT INTO Administradores(nombre, apellido, dni, usuario, passwd) VALUES (?, ?, ?, ?, ?)', (nombre, apellido, dni, usuario, passwd))
         database.commit()
+        self.ventana.displayUserFAdmin.clear()
+        self.ventana.displayPassFAdmin.clear()
+        self.ventana.displayDniAdmin.clear()
+        self.ventana.displayNombreAdmin.clear()
+        self.ventana.displayApellidoAdmin.clear()
+        self.ventana.displayUserFAdmin.insert("Usuario")
+        self.ventana.displayPassFAdmin.insert("Passwd")
+        self.ventana.displayDniAdmin.insert("Dni")
+        self.ventana.displayNombreAdmin.insert("Nombre")
+        self.ventana.displayApellidoAdmin.insert("Apellido")
         self.show_sv()
 
     def validar(self):

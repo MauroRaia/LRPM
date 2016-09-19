@@ -31,7 +31,7 @@ class MainWindow(QtGui.QWidget):
         button_showAgregarAdmin = QtGui.QPushButton('Agregar Admin')
         button_login_empleado = QtGui.QPushButton('Login')
         button_submit = QtGui.QPushButton('Submit')
-        button_ficharEntrada = QtGui.QPushButton('Fichar Entrada')
+        button_ficharEntrada = QtGui.QPushButton('Fichar Entrada/Salida')
         button_login_Admin = QtGui.QPushButton('Login')
         button_validar_horas = QtGui.QPushButton('Validar Horas')
 
@@ -58,7 +58,7 @@ class MainWindow(QtGui.QWidget):
         button_showAgregarEmpleado.clicked.connect(self.controlador.show_cv)
         button_validar_horas.clicked.connect(lambda: self.controlador.validar())
         button_disconnect_sv = QtGui.QPushButton('Desconectar')
-        button_disconnect_sv.clicked.connect(self.controlador.show_fv)
+        button_disconnect_sv.clicked.connect(self.controlador.disconnect)
         layout_grid_sv.addWidget(button_disconnect_sv)
         self.box_sv = QtGui.QGroupBox()
         self.box_sv.setLayout(layout_grid_sv)
