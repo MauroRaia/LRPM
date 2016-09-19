@@ -4,6 +4,11 @@ sys.path.append('../Modelo')
 from querys import *
 import querys
 
+import sqlite3
+
+database = sqlite3.connect('fichadas.db')
+querys = database.cursor()
+
 class Controller():
 
     def __init__(self, una_ventana):
@@ -46,8 +51,15 @@ class Controller():
         self.ventana.box_qv.setHidden(False)
 
     def autenticateA(self, user, password):
-        if autenticarAdmin(user, password):
+        contra = querys.execute('SELECT passwd FROM Administradores WHERE usuario=?', (user,))
+        COLUMN = 0
+        column = [elt[COLUMN] for elt in contra]
+        if column == [password]:
             self.ventana.show_sv()
+            print "si"
+        else:
+            print user
+            print password
 
     def autenticateE(user, password):
         if autenticarEmpleado(user, password):

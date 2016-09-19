@@ -14,7 +14,7 @@ def autenticarEmpleado(autUsuario, autPasswd ):
             return False
 
 def autenticarAdmin(autUsuario, passwdaut ):
-        contra = querys.execute('SELECT passwd FROM Administradores WHERE usuario=?', (autUsuario,))
+        contra = querys.execute('SELECT passwd FROM Administradores WHERE usuario=?)', (autUsuario,))
         COLUMN = 0
         column = [elt[COLUMN] for elt in contra]
         if column == [passwdaut]:
