@@ -17,9 +17,10 @@ class MainWindow(QtGui.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.controlador = Controller(self)
+        db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+        db.setDatabaseName('fichadas.db')
+        self.model = QtSql.QSqlTableModel()
         self.init_ui()
-
-
 
     def init_ui(self):
 
@@ -59,15 +60,10 @@ class MainWindow(QtGui.QWidget):
         self.box_sv = QtGui.QGroupBox()
         self.box_sv.setLayout(layout_grid_sv)
         self.box_sv.setHidden(True)
-        db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
-        db.setDatabaseName('fichadas.db')
-        model = QtSql.QSqlTableModel()
-        initializeModel(model)
-        timer = QtCore.QTimer()
-        timer.timeout.connect(lambda: self.initializeModel(model))
-        timer.start(500)
+        #model = QtSql.QSqlTableModel()
+        initializeModel(self.model)
         view = QtGui.QTableView()
-        view.setModel(model)
+        view.setModel(self.model)
         view.setWindowTitle("Fichadas del dia")
         layout_grid_sv.addWidget(view)
 
@@ -136,4 +132,7 @@ class MainWindow(QtGui.QWidget):
 
 app = QtGui.QApplication(sys.argv)
 window = MainWindow()
+timer = QtCore.QTimer()
+timer.timeout.connect(lambda: initializeModel(window.model))
+timer.start(500)
 sys.exit(app.exec_())
