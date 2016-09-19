@@ -1,5 +1,9 @@
 import sys
+<<<<<<< HEAD
 from PyQt import QtCore, QtGui, QtSql
+=======
+from PyQt4 import QtCore, QtGui, QtSql
+>>>>>>> 8178350d61ef12ce4294326cb5978b4b60fecb0b
 import sqlite3
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QDialog, QApplication, QPushButton, QLineEdit, QFormLayout, QTableView
@@ -43,7 +47,12 @@ class Form(QDialog):
         id_user = int(self.idLine.text())
         user = str(self.userLine.text())
         passwd= str(self.passwdLine.text())
+<<<<<<< HEAD
         querys.execute('insert into empleados values (?, ?, ?)', (id_user, user, passwd))
+=======
+        querys.execute('drop table empleados')
+        #querys.execute('insert into empleados values (?, ?, ?)', (id_user, user, passwd))
+>>>>>>> 8178350d61ef12ce4294326cb5978b4b60fecb0b
         database.commit()
 
 
