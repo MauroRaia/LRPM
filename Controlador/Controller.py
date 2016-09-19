@@ -67,9 +67,10 @@ class Controller():
         if autenticarEmpleado(user, passwd):
             ident = querys.execute('SELECT id_empleado FROM Empleados WHERE usuario=?', (user,))
             COLUMN = 0
-            id_usuario = [elt[COLUMN] for elt in ident]
+            column = [elt[COLUMN] for elt in ident]
             timenow = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-            querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_usuario[0], timenow))
+            querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (column[0], timenow))
+            database.commit()
             self.show_sv()
 
     def agregarEmpleado(self):
@@ -91,7 +92,7 @@ class Controller():
         database.commit()
         self.show_sv()
 
-    def validar():
+    def validar(self):
         querys.execute('INSERT INTO Fichadas SELECT * FROM Temporal')
         querys.execute('DELETE FROM Temporal')
         database.commit()

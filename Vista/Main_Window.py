@@ -4,14 +4,13 @@ from PyQt4 import QtGui, QtCore, QtSql
 sys.path.append('../Controlador')
 from Controller import *
 
-
 def initializeModel(model):
     model.setTable('Temporal')
     model.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
     model.select()
-    model.setHeaderData(0, QtCore.Qt.Horizontal, "ID")
-    model.setHeaderData(1, QtCore.Qt.Horizontal, "Fecha Entrada")
-    model.setHeaderData(2, QtCore.Qt.Horizontal, "Fecha Salida")
+    model.setHeaderData(0, QtCore.Qt.Horizontal, "Fecha entrada")
+    model.setHeaderData(1, QtCore.Qt.Horizontal, "Fecha salida")
+    model.setHeaderData(2, QtCore.Qt.Horizontal, "ID")
 
 
 class MainWindow(QtGui.QWidget):
@@ -21,7 +20,9 @@ class MainWindow(QtGui.QWidget):
         self.init_ui()
 
 
+
     def init_ui(self):
+
         self.main_grid = QtGui.QGridLayout()
 
         #Botones
@@ -54,12 +55,16 @@ class MainWindow(QtGui.QWidget):
         button_ficharEntrada.clicked.connect(self.controlador.show_tv)
         button_showAgregarAdmin.clicked.connect(self.controlador.show_qv)
         button_showAgregarEmpleado.clicked.connect(self.controlador.show_cv)
+        button_validar_horas.clicked.connect(lambda: self.controlador.validar())
         self.box_sv = QtGui.QGroupBox()
         self.box_sv.setLayout(layout_grid_sv)
         self.box_sv.setHidden(True)
+        db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
+        db.setDatabaseName('fichadas.db')
         model = QtSql.QSqlTableModel()
+        initializeModel(model)
         timer = QtCore.QTimer()
-        timer.timeout.connect(lambda: initializeModel(model))
+        timer.timeout.connect(lambda: self.initializeModel(model))
         timer.start(500)
         view = QtGui.QTableView()
         view.setModel(model)
@@ -127,6 +132,7 @@ class MainWindow(QtGui.QWidget):
         self.setWindowTitle('Montage')
         self.setGeometry(400, 400, 400, 400)
         self.show()
+
 
 app = QtGui.QApplication(sys.argv)
 window = MainWindow()
