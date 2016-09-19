@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
-from PyQt4 import QtGui, QtSql, QtCore
-from PyQt4.QtCore import *
+from PyQt4 import QtGui, QtCore, QtSql
 sys.path.append('../Controlador')
 from Controller import *
+
 
 def initializeModel(model):
     model.setTable('Temporal')
@@ -31,13 +31,11 @@ class MainWindow(QtGui.QWidget):
         button_submit = QtGui.QPushButton('Submit')
         button_ficharEntrada = QtGui.QPushButton('Fichar Entrada')
         button_login_Admin = QtGui.QPushButton('Login')
-        button_ficharEntrada.clicked.connect(self.controlador.show_tv)
+        button_validar_horas = QtGui.QPushButton('Validar Horas')
 
         ##Primera Vista
         self.displayUserAdmin = QtGui.QLineEdit('Usuario')
         self.displayPassAdmin = QtGui.QLineEdit('password')
-        userAdmin = str(self.displayUserAdmin.text())
-        passAdmin = str(self.displayPassAdmin.text())
         self.displayPassAdmin.setEchoMode(2)
         layout_grid_fv = QtGui.QGridLayout()
         layout_grid_fv.addWidget(self.displayUserAdmin)
@@ -45,13 +43,17 @@ class MainWindow(QtGui.QWidget):
         layout_grid_fv.addWidget(button_login_Admin)
         self.box_fv = QtGui.QGroupBox()
         self.box_fv.setLayout(layout_grid_fv)
-        button_login_Admin.clicked.connect(lambda: self.controlador.autenticateA(userAdmin, passAdmin))
+        button_login_Admin.clicked.connect(lambda: self.controlador.autenticateA())
 
         #Segunda Vista
         layout_grid_sv = QtGui.QGridLayout()
         layout_grid_sv.addWidget(button_ficharEntrada)
         layout_grid_sv.addWidget(button_showAgregarAdmin)
         layout_grid_sv.addWidget(button_showAgregarEmpleado)
+        layout_grid_sv.addWidget(button_validar_horas)
+        button_ficharEntrada.clicked.connect(self.controlador.show_tv)
+        button_showAgregarAdmin.clicked.connect(self.controlador.show_qv)
+        button_showAgregarEmpleado.clicked.connect(self.controlador.show_cv)
         self.box_sv = QtGui.QGroupBox()
         self.box_sv.setLayout(layout_grid_sv)
         self.box_sv.setHidden(True)
@@ -72,6 +74,7 @@ class MainWindow(QtGui.QWidget):
         layout_grid_tv.addWidget(self.displayUserEmpleado)
         layout_grid_tv.addWidget(self.displayPassEmpleado)
         layout_grid_tv.addWidget(button_login_empleado)
+        button_login_empleado.clicked.connect(lambda: self.controlador.autenticateE())
         self.box_tv = QtGui.QGroupBox()
         self.box_tv.setLayout(layout_grid_tv)
         self.box_tv.setHidden(True)
@@ -82,6 +85,7 @@ class MainWindow(QtGui.QWidget):
         self.displayDniEmpleado = QtGui.QLineEdit('DNI')
         self.displayUserFEmpleado = QtGui.QLineEdit('Usuario')
         self.displayPassFEmpleado = QtGui.QLineEdit('Password')
+        button_submit.clicked.connect(lambda: self.controlador.agregarEmpleado())
         layout_grid_cv = QtGui.QGridLayout()
         layout_grid_cv.addWidget(self.displayNombreEmpleado)
         layout_grid_cv.addWidget(self.displayApellidoEmpleado)
@@ -100,6 +104,7 @@ class MainWindow(QtGui.QWidget):
         self.displayUserFAdmin = QtGui.QLineEdit('Usuario')
         self.displayPassFAdmin = QtGui.QLineEdit('password')
         button_submit_admin = QtGui.QPushButton('submit')
+        button_submit_admin.clicked.connect(lambda: self.controlador.agregarAdministrador())
         layout_grid_qv = QtGui.QGridLayout()
         layout_grid_qv.addWidget(self.displayNombreAdmin)
         layout_grid_qv.addWidget(self.displayApellidoAdmin)

@@ -2,8 +2,6 @@ from time import gmtime, strftime
 import sys
 sys.path.append('../Modelo')
 from querys import *
-import querys
-
 import sqlite3
 
 database = sqlite3.connect('fichadas.db')
@@ -44,39 +42,54 @@ class Controller():
         self.ventana.box_qv.setHidden(True)
 
     def show_qv(self):
-        self.ventana.box_fv.setHidden(False)
+        self.ventana.box_fv.setHidden(True)
         self.ventana.box_sv.setHidden(True)
         self.ventana.box_tv.setHidden(True)
         self.ventana.box_cv.setHidden(True)
         self.ventana.box_qv.setHidden(False)
 
-    def autenticateA(self, user, password):
+    def autenticateA(self):
+        user = str(self.ventana.displayUserAdmin.text())
+        passwd = str(self.ventana.displayPassAdmin.text())
         contra = querys.execute('SELECT passwd FROM Administradores WHERE usuario=?', (user,))
         COLUMN = 0
         column = [elt[COLUMN] for elt in contra]
-        if column == [password]:
-            self.ventana.show_sv()
+        if column == [passwd]:
+            self.show_sv()
             print "si"
         else:
             print user
-            print password
+            print passwd
 
-    def autenticateE(user, password):
-        if autenticarEmpleado(user, password):
-            ident = querys.execute('SELECT ID FROM Empleados WHERE usuario=?', (user,))
+    def autenticateE(self):
+        user = str(self.ventana.displayUserEmpleado.text())
+        passwd = str(self.ventana.displayPassEmpleado.text())
+        if autenticarEmpleado(user, passwd):
+            ident = querys.execute('SELECT id_empleado FROM Empleados WHERE usuario=?', (user,))
             COLUMN = 0
             id_usuario = [elt[COLUMN] for elt in ident]
             timenow = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-            querys.execute('INSERT INTO Temporal VALUES (?, ?)', (id_usuario[0], timenow))
+            querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_usuario[0], timenow))
             self.show_sv()
 
-    def agregarEmpleado(usuario, passwd, dni):
-        querys.execute('INSERT INTO Empleados VALUES (?, ?, ?, ?, ?)', (usuario, passwd, dni, nombre, apellido))
+    def agregarEmpleado(self):
+        usuario = str(self.ventana.displayUserFEmpleado.text())
+        passwd = str(self.ventana.displayPassFEmpleado.text())
+        nombre = str(self.ventana.displayNombreEmpleado.text())
+        apellido = str(self.ventana.displayApellidoEmpleado.text())
+        dni = int(self.ventana.displayDniEmpleado.text())
+        querys.execute('INSERT INTO Empleados(nombre, apellido, dni, usuario, passwd) VALUES (?, ?, ?, ?, ?)', (nombre, apellido, dni, usuario, passwd))
         database.commit()
 
-    def agregarAdministrador(usuario, passwd, dni, nombre, apellido):
-        querys.execute('INSERT INTO Administradores VALUES (?, ?, ?, ?, ?)', (usuario, passwd, dni, nombre, apellido))
+    def agregarAdministrador(self):
+        usuario = str(self.ventana.displayUserFAdmin.text())
+        passwd = str(self.ventana.displayPassFAdmin.text())
+        nombre = str(self.ventana.displayNombreAdmin.text())
+        apellido = str(self.ventana.displayApellidoAdmin.text())
+        dni = int(self.ventana.displayDniAdmin.text())
+        querys.execute('INSERT INTO Administradores(nombre, apellido, dni, usuario, passwd) VALUES (?, ?, ?, ?, ?)', (nombre, apellido, dni, usuario, passwd))
         database.commit()
+        self.show_sv()
 
     def validar():
         querys.execute('INSERT INTO Fichadas SELECT * FROM Temporal')
