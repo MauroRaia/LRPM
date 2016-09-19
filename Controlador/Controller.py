@@ -1,4 +1,4 @@
-from time import gmtime, strftime
+from time import *
 import sys
 sys.path.append('../Modelo')
 from querys import *
@@ -65,7 +65,7 @@ class Controller():
             ident = querys.execute('SELECT id_empleado FROM Empleados WHERE usuario=?', (user,))
             COLUMN = 0
             column = [elt[COLUMN] for elt in ident]
-            timenow = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+            timenow = strftime("%Y-%m-%d %H:%M:%S", localtime())
             id_empleado = column[0]
             if siExisteEntrada(id_empleado):
                 querys.execute('UPDATE Temporal SET salida=? WHERE id_usuario=?', (timenow, id_empleado))
@@ -75,6 +75,14 @@ class Controller():
                 querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_empleado, timenow))
                 database.commit()
                 self.show_sv()
+
+                #querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_empleado, timenow))
+                #database.commit()
+                #self.show_sv()
+            #else:
+                #querys.execute('UPDATE Temporal SET salida=? WHERE id_usuario=?', (timenow, id_empleado))
+                #database.commit()
+                #self.show_sv()
 
     def agregarEmpleado(self):
         usuario = str(self.ventana.displayUserFEmpleado.text())
