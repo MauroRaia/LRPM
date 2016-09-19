@@ -22,8 +22,8 @@ def autenticarAdmin(autUsuario, passwdaut ):
         else:
             return False
 def siExisteEntrada(id_empleado):
-    checkEntrada = querys.execute('SELECT entrada FROM Temporal WHERE id_usuario=?', (id_empleado,))
+    checkEntrada = querys.execute('SELECT count() FROM Temporal')
     COLUMN = 0
     column = [elt[COLUMN] for elt in checkEntrada]
     prueba = column[0]
-    return not prueba == ""
+    return prueba!=0
