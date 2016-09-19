@@ -14,10 +14,17 @@ def autenticarEmpleado(autUsuario, autPasswd ):
             return False
 
 def autenticarAdmin(autUsuario, passwdaut ):
-        contra = querys.execute('SELECT passwd FROM Administradores WHERE usuario=?)', (autUsuario,))
+        contra = querys.execute('SELECT passwd FROM Administradores WHERE usuario=?', (autUsuario,))
         COLUMN = 0
         column = [elt[COLUMN] for elt in contra]
         if column == [passwdaut]:
             return True
         else:
             return False
+def siExisteEntrada(id_empleado):
+    checkEntrada = querys.execute('SELECT entrada FROM Temporal WHERE id_usuario=?', (id_empleado,))
+    print checkEntrada.fetchall()
+    if checkEntrada.fetchall() == []:
+        return True
+    else:
+        return False

@@ -56,10 +56,7 @@ class Controller():
         column = [elt[COLUMN] for elt in contra]
         if column == [passwd]:
             self.show_sv()
-            print "si"
-        else:
-            print user
-            print passwd
+
 
     def autenticateE(self):
         user = str(self.ventana.displayUserEmpleado.text())
@@ -69,9 +66,15 @@ class Controller():
             COLUMN = 0
             column = [elt[COLUMN] for elt in ident]
             timenow = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-            querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (column[0], timenow))
-            database.commit()
-            self.show_sv()
+            id_empleado = column[0]
+            if siExisteEntrada(id_empleado):
+                querys.execute('UPDATE Temporal SET salida=? WHERE id_usuario=?', (timenow, id_empleado))
+                database.commit()
+                self.show_sv()
+            else:
+                querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_empleado, timenow))
+                database.commit()
+                self.show_sv()
 
     def agregarEmpleado(self):
         usuario = str(self.ventana.displayUserFEmpleado.text())
