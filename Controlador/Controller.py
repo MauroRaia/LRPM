@@ -19,6 +19,7 @@ class Controller():
         self.ventana.box_tv.setHidden(True)
         self.ventana.box_cv.setHidden(True)
         self.ventana.box_qv.setHidden(True)
+        self.ventana.box_vv.setHidden(True)
 
     def show_sv(self):
         self.ventana.box_fv.setHidden(True)
@@ -26,6 +27,7 @@ class Controller():
         self.ventana.box_tv.setHidden(True)
         self.ventana.box_cv.setHidden(True)
         self.ventana.box_qv.setHidden(True)
+        self.ventana.box_vv.setHidden(True)
 
     def show_tv(self):
         self.ventana.box_fv.setHidden(True)
@@ -33,6 +35,7 @@ class Controller():
         self.ventana.box_tv.setHidden(False)
         self.ventana.box_cv.setHidden(True)
         self.ventana.box_qv.setHidden(True)
+        self.ventana.box_vv.setHidden(True)
 
     def show_cv(self):
         self.ventana.box_fv.setHidden(True)
@@ -47,6 +50,15 @@ class Controller():
         self.ventana.box_tv.setHidden(True)
         self.ventana.box_cv.setHidden(True)
         self.ventana.box_qv.setHidden(False)
+        self.ventana.box_vv.setHidden(True)
+
+    def show_vv(self):
+        self.ventana.box_fv.setHidden(True)
+        self.ventana.box_sv.setHidden(True)
+        self.ventana.box_tv.setHidden(True)
+        self.ventana.box_cv.setHidden(True)
+        self.ventana.box_qv.setHidden(True)
+        self.ventana.box_vv.setHidden(False)
 
     def disconnect(self):
         self.ventana.displayUserAdmin.clear()
@@ -72,24 +84,19 @@ class Controller():
             ident = querys.execute('SELECT id_empleado FROM Empleados WHERE usuario=?', (user,))
             COLUMN = 0
             column = [elt[COLUMN] for elt in ident]
-            timenow = strftime("%Y-%m-%d %H:%M:%S", localtime())
+            timenow = strftime("%H:%M:%S", localtime())
+            year = strftime("%Y", localtime())
+            month = strftime("%m", localtime())
+            day = strftime("%d", localtime())
             id_empleado = column[0]
             if siExisteEntrada(id_empleado):
-                querys.execute('UPDATE Temporal SET salida=? WHERE id_usuario=?', (timenow, id_empleado))
+                querys.execute('UPDATE Temporal SET salida=? WHERE id_empleado=?', (timenow, id_empleado))
                 database.commit()
                 self.show_sv()
             else:
-                querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_empleado, timenow))
+                querys.execute('INSERT INTO Temporal(id_empleado, year, month, day, entrada) VALUES (?, ?, ?, ?, ?)', (id_empleado, year, month, day, timenow))
                 database.commit()
                 self.show_sv()
-
-                #querys.execute('INSERT INTO Temporal(id_usuario, entrada) VALUES (?, ?)', (id_empleado, timenow))
-                #database.commit()
-                #self.show_sv()
-            #else:
-                #querys.execute('UPDATE Temporal SET salida=? WHERE id_usuario=?', (timenow, id_empleado))
-                #database.commit()
-                #self.show_sv()
 
     def agregarEmpleado(self):
         usuario = str(self.ventana.displayUserFEmpleado.text())
@@ -107,9 +114,9 @@ class Controller():
         self.ventana.displayUserFEmpleado.insert("Usuario")
         self.ventana.displayPassFEmpleado.insert("Passwd")
         self.ventana.displayDniEmpleado.insert("Dni")
-        self.ventana.displayNombreEmpleado("Nombre")
-        self.ventana.displayApellidoEmpleado("Apellido")
-        self.show_sv
+        self.ventana.displayNombreEmpleado.insert("Nombre")
+        self.ventana.displayApellidoEmpleado.insert("Apellido")
+        self.show_sv()
 
     def agregarAdministrador(self):
         usuario = str(self.ventana.displayUserFAdmin.text())
@@ -135,3 +142,31 @@ class Controller():
         querys.execute('INSERT INTO Fichadas SELECT * FROM Temporal')
         querys.execute('DELETE FROM Temporal')
         database.commit()
+
+
+    def busqueda(self):
+        querys.execute('DELETE FROM BusquedaF')
+        database.commit()
+        value = str(self.ventana.comboBox.currentText())
+        desde = str(self.ventana.displayDesde.text())
+        hasta = str(self.ventana.displayHasta.text())
+        self.ventana.displayDesde.clear()
+        self.ventana.displayHasta.clear()
+        print value
+        print desde
+        print hasta
+        querys.execute('INSERT INTO BusquedaF SELECT * FROM Fichadas WHERE {campo} BETWEEN ? AND ?'.format(campo=value), (desde, hasta))
+        database.commit()
+
+    def atrasBusqueda(self):
+        querys.execute("DELETE FROM BusquedaF")
+        database.commit()
+        self.ventana.displayDesde.clear()
+        self.ventana.displayHasta.clear()
+        self.ventana.displayDesde.insert("Desde")
+        self.ventana.displayHasta.insert("Hasta")
+        self.show_sv()
+
+
+
+#SELECT * FROM myTable WHERE myNumber >= 1 AND myNumber <= 100, (campo, valor1, campo, valor2)
